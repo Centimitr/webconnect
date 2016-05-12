@@ -29,3 +29,5 @@ class Webconnect {
 		this.websocket.close();
 	};
 }
+
+var c = new Webconnect('ws://localhost:1234/echo');
