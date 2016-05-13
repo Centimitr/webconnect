@@ -6,7 +6,6 @@
 		class Task {
 	   		constructor(id,method, params, data){
 	   			this.id = id;
-	   			// this.id = method;
 	   			this.status = 'queued';
 	   			this.request = {
 	   				id: this.id || Date.now(),
@@ -31,8 +30,6 @@
 				// websocket
 				this.url = url;
 				this.websocket;
-				// this.protocol;
-				// this.isConnected = false;
 				// webconnct
 				this._order = 0;
 				this.queue = [];
@@ -54,25 +51,6 @@
 				}else {
 				}
 			}
-			// websocket original methods
-			// send(data){
-			// 	return new Promise((resolve,reject)=>{
-			// 		// add new task
-			// 		let w = new QueueItem();
-			// 		w.onreceive = function(data){
-			// 			resolve(data);
-			// 			return;
-			// 		};
-			// 		console.log('METHOD: Send.');
-			// 		this.queue.push(w);
-			// 		// do task in queue
-			// 		this._sendQueueRequests();
-			// 		// timeout
-			// 		setTimeout(function() {
-			// 			reject('Timeout.');
-			// 		}, this.REQUEST_TIMEOUT);
-			// 	})
-			// };
 			call(method, params, data){
 				return new Promise((resolve,reject)=>{
 					// add new task
@@ -128,11 +106,6 @@
 		}
 		// have a try
 		var c = new Webconnect('ws://localhost:12345/echo');
-		// c.send(123456).then((json)=>{
-		// 	console.log('USER: Data received',json);
-		// },(error)=>{
-		// 	console.log('USER: Receive error',error);
-		// });
 		setInterval(function(){
 			let i = 100;
 			while (i--) {
@@ -144,11 +117,6 @@
 			});
 			}
 		}, 1000);
-		
-		// disconnect
-		// setTimeout(function(){
-		// 	c.disconnect();
-		// }, 5000)
 		</script>
 	</body>
 </html>
