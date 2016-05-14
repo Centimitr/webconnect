@@ -18,5 +18,19 @@ class Task {
 	setSent(){
 		this.status='sent';
 	}
+	setReject(){
+		this.status='reject';
+	}
+	setResolve(){
+		this.status='resolve';
+	}
+	startTiming(delay){
+		setTimeout(()=>{
+			if (this.isSent()) {
+				this.ontimeout()
+			}
+		}, delay)
+	}
 	onreceive(){}
+	ontimeout(){}
 }

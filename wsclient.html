@@ -7,29 +7,17 @@
 		<script type="text/javascript">
 		// have a try
 		var c = new WebMessage('ws://localhost:12345/echo');
-		let i = 100;
+		let i = 2000;
+		var s = 0, f = 0;
 		while (i--) {
-		c.call('getIndexArticles',{},{}).then((json)=>{
-			// console.log('--USER: Response received.\n',json);
-			console.log('--USER: Response received.');
-		},(error)=>{
-			console.log('--USER: Receive error:',error);
-		});
+			c.call('getIndexArticles',{},{}).then((json)=>{
+				console.log('--USER: Response received.');
+				s++;
+			},(error)=>{
+				console.log('--USER: Receive error:',error);
+				f++;
+			});
 		}
-		c.disconnect();
-		i = 3;
-		while (i--) {
-		c.call('getIndexArticles',{},{}).then((json)=>{
-			// console.log('--USER: Response received.\n',json);
-			console.log('--USER: Response received.');
-		},(error)=>{
-			console.warn('--USER: Receive error:',error);
-		});
-		}
-		// disconnect
-		// setTimeout(function(){
-		// 	c.disconnect();
-		// }, 5000)
 		</script>
 	</body>
 </html>
