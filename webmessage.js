@@ -28,11 +28,23 @@ class WebMessage {
                 }
             }
         };
+        this.queue.clear = function(){
+            this.splice(0,this.queue.length);
+        };
+        this.queue.clearResolveAndReject = function(){
+             let num = this.length;
+             while (num--) {
+                 let item = this.pop();
+                 if (!item.isResolve()&&!item.isReject()) {
+                    this.push(item);
+                 }
+             }
+        };
         this._requestOrder = 0;
         this.MAX_WAITING_NUM = 64;
         this.CONTINUE_SEND_REST_DELAY = 10;
-        this.CONTINUE_SEND_REST_RATIO = 0.5;
-        this.REQUEST_TIMEOUT = 250;
+        this.CONTINUE_SEND_REST_RATIO = 0.6;
+        this.REQUEST_TIMEOUT = 150;
         this.PROMISE_TIMEOUT = 6400;
         // this.CONNECTION_TIMEOUT = 4000;
         this._connect();
@@ -59,13 +71,14 @@ class WebMessage {
         }else{
         	this._connect();
         }
-    }
+    };
+
     _continueSendRest(){
     	//console.log('RETRY');
     	setTimeout(()=>{
     		this._sendQueueRequests();
     	}, this.CONTINUE_SEND_REST_DELAY);
-    }
+    };
 
     do(method, params, data) {
         return new Promise((resolve, reject) => {
@@ -90,10 +103,15 @@ class WebMessage {
         		reject('Promise Timeout.');
         	},this.PROMISE_TIMEOUT);
     	});
-    }
+    };
+
+    clear(){
+        this.queue.clear();
+    };
 
     // connection
     _connect() {
+        // if no websocket has been initialed or the websocket has been closed
     	if (!this.websocket || this.websocket.readyState===3) {
         	//console.log('SOCKET: Try to connect.');
         	this.websocket = new WebSocket(this.url);

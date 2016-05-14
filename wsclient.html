@@ -4,10 +4,10 @@
 	<body>
 		<script src=".\task.js"></script>
 		<script src=".\webmessage.js"></script>
-		<script type="text/javascript">
+		<script>
 		// have a try
 		var c = new WebMessage('ws://localhost:12345/echo');
-		let i = 2000;
+		let i = 1600;
 		var s = 0, f = 0;
 		while (i--) {
 			c.do('getIndexArticles',{},{}).then((json)=>{
