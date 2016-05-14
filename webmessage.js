@@ -29,7 +29,6 @@ class WebMessage {
             }
         };
         this._requestOrder = 0;
-        this._isConnecting = false;
         this.MAX_WAITING_NUM = 64;
         this.CONTINUE_SEND_REST_DELAY = 10;
         this.CONTINUE_SEND_REST_RATIO = 0.5;
@@ -68,7 +67,7 @@ class WebMessage {
     	}, this.CONTINUE_SEND_REST_DELAY);
     }
 
-    call(method, params, data) {
+    do(method, params, data) {
         return new Promise((resolve, reject) => {
             // add new task.
             let w = new WebMessageTask((this._requestOrder++) + '.' + method, method, params, data);
@@ -96,7 +95,6 @@ class WebMessage {
     // connection
     _connect() {
     	if (!this.websocket || this.websocket.readyState===3) {
-    		this._isConnecting = true;
         	//console.log('SOCKET: Try to connect.');
         	this.websocket = new WebSocket(this.url);
         	this.websocket.onopen = (event) =>{
@@ -120,7 +118,6 @@ class WebMessage {
         	};
         	this.websocket.onclose = () =>{};
         	this.websocket.onerror = () =>{};
-        	this._isConnecting = false;
     	}    
     };
 
