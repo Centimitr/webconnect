@@ -71,7 +71,7 @@ class WebMessage {
     call(method, params, data) {
         return new Promise((resolve, reject) => {
             // add new task.
-            let w = new Task((this._requestOrder++) + '.' + method, method, params, data);
+            let w = new WebMessageTask((this._requestOrder++) + '.' + method, method, params, data);
         	w.onreceive = (data) =>{
         		w.setResolve();
             	resolve(data);

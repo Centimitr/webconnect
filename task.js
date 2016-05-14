@@ -1,4 +1,4 @@
-class Task {
+class WebMessageTask {
 	constructor(id,method, params, data){
 		this.id = id|| Date.now();
 		this.status = 'queued';
