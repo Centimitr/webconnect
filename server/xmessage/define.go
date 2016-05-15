@@ -15,6 +15,6 @@ type Res struct {
 	Error  string `json:'error'`
 }
 
-type Controller func(Req, *Res)
+// type Controller func(Req, *Res)
 
-type Router map[string]Controller
+// type Router map[string]Controller
