@@ -16,21 +16,6 @@ func Server(ws *websocket.Conn) {
 		}
 		var r Req
 		json.Unmarshal([]byte(req), &r)
-		fmt.Println("RECEIVED.", r.Params)
-		res := `
-        {
-    		"id":"` + r.Id + `",
-    		"params":{},
-    		"data":{
-    			"articles":[]
-    		},
-    		"error":{}
-    	}`
-		fmt.Println("SEND.")
-
-		if err = websocket.Message.Send(ws, res); err != nil {
-			fmt.Println("SEND ERROR.")
-			break
-		}
+		go do(ws, &r)
 	}
 }

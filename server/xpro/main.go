@@ -4,9 +4,9 @@ import (
 	_ "github.com/Centimitr/xapp"
 	msg "github.com/Centimitr/xmessage"
 
-	// "golang.org/x/net/websocket"
-	// "net/http"
 	"fmt"
+	"golang.org/x/net/websocket"
+	"net/http"
 )
 
 func main() {
@@ -16,9 +16,9 @@ func main() {
 		fmt.Printf("%20s %10s %30s\n", proc.Name, proc.Module, proc.PkgPath)
 	}
 	// SERVER
-	// http.Handle("/echo", websocket.Handler(msg.Server))
-	// err := http.ListenAndServe(":12345", nil)
-	// if err != nil {
-	// 	panic("ListenAndServe: " + err.Error())
-	// }
+	http.Handle("/echo", websocket.Handler(msg.Server))
+	err := http.ListenAndServe(":12345", nil)
+	if err != nil {
+		panic("ListenAndServe: " + err.Error())
+	}
 }
