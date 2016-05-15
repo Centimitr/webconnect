@@ -1,24 +1,19 @@
 package main
 
 import (
+	_ "github.com/Centimitr/xapp1"
 	msg "github.com/Centimitr/xmessage"
 	// "golang.org/x/net/websocket"
 	// "net/http"
 	"fmt"
 )
 
-type Module struct{}
-
-func (m Module) GetIndexArticles() {
-	fmt.Println("A")
-}
-func (m Module) GetMessages() {
-	fmt.Println("M")
-}
 func main() {
 	// EXPERIMENT
-	m := Module{}
-	msg.Print(m)
+	// m := Module{}
+	// msg.Print(m)
+	// msg.Load(m)
+	fmt.Println(msg.ProcessorTable)
 	// SERVER
 	// http.Handle("/echo", websocket.Handler(msg.Server))
 	// err := http.ListenAndServe(":12345", nil)
