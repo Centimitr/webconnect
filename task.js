@@ -5,8 +5,8 @@ class WebMessageTask {
 		this.request = {
 			id: this.id,
 			method: method || "",
-			params: params || {},
-			data: data || {}
+			params: JSON.stringify(params || {}),
+			data: JSON.stringify(data || {})
 		}
 	}
 	isQueued(){

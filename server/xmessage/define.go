@@ -2,7 +2,7 @@ package xmessage
 
 import (
 	"fmt"
-	// "strings"
+	"strings"
 )
 
 type Req struct {
@@ -32,7 +32,35 @@ type ParamConfig struct {
 	Key      string
 	Required bool
 	Default  string
+	// Echo     bool
 }
+
+/*
+	init
+*/
+
+func (c *Ctx) Init() {
+	c.Params = make(map[string]string)
+	c.reqParams = make(map[string]string)
+	c.parseParams()
+}
+func (c *Ctx) parseParams() {
+	fmt.Println(c.req.Params)
+	s := c.req.Params
+	s = strings.TrimSpace(s)
+	s = strings.TrimPrefix(s, "{")
+	s = strings.TrimSuffix(s, "}")
+	// kvs := strings.Split(s, ",")
+	// fmt.Println(kvs)
+	// fmt.Println("ReqParamsString:", c.req.Params)
+	// res.Params
+	// fmt.Println("ReqParams", c.reqParams)
+}
+
+/*
+	error
+*/
+
 type CtxError struct {
 	Warn  []string
 	Fatal []string
@@ -41,16 +69,10 @@ type CtxError struct {
 func (c *CtxError) NewFatal(info string) {
 	c.Fatal = append(c.Fatal, info)
 }
-func (c *Ctx) Init() {
-	c.Params = make(map[string]string)
-	c.reqParams = make(map[string]string)
-	c.parseParams()
-}
-func (c *Ctx) parseParams() {
-	fmt.Println("ReqParamsString:", c.req.Params)
-	// res.Params
-	fmt.Println("ReqParams", c.reqParams)
-}
+
+/*
+	context methods used in
+*/
 
 func (c *Ctx) Set(p *ParamConfig) *Ctx {
 	switch {
