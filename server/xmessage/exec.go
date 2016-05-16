@@ -14,12 +14,10 @@ func do(ws *websocket.Conn, req *Req) {
 		fmt.Println(err)
 		return
 	}
-	f()
-	// exec
-	// return
-	res := Res{Id: req.Id}
+	res := &Res{Id: req.Id}
+	f(req, res)
 	// send back
-	resBytes, _ := json.Marshal(res)
+	resBytes, _ := json.Marshal(*res)
 	if err := websocket.Message.Send(ws, string(resBytes)); err != nil {
 		fmt.Println("SEND ERROR.")
 		return

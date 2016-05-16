@@ -7,10 +7,10 @@ import (
 
 type Article struct{}
 
-func (m Article) GetIndexArticles() {
-	fmt.Println("A")
+func (m Article) GetIndexArticles(req *msg.Req, res *msg.Res) {
+	fmt.Println(req.Id, res.Id)
 }
-func (m Article) GetMessages() {
+func (m Article) GetMessages(req *msg.Req, res *msg.Res) {
 	fmt.Println("M")
 }
 func init() {

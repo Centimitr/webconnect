@@ -19,14 +19,14 @@ func LoadModule(x interface{}) {
 	fmt.Println("\nLOAD:", t.Name())
 	for i := 0; i < v.NumMethod(); i++ {
 		fmt.Println("-----", t.Method(i).Name)
-		fmt.Println(t.Method(i).Name[0])
+		fmt.Println(t.Methodclear(i).Name[0])
 		index := i
 		registerProcessor(&Processor{
 			PkgPath: t.PkgPath(),
 			Module:  t.Name(),
 			Name:    t.Method(i).Name,
-			Func: func() []reflect.Value {
-				return t.Method(index).Func.Call([]reflect.Value{v})
+			Func: func(req *Req, res *Res) []reflect.Value {
+				return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(req), reflect.ValueOf(res)})
 			},
 		})
 	}
