@@ -2,7 +2,8 @@ package xmessage
 
 import (
 	"fmt"
-	"strings"
+	// "strings"
+	"encoding/json"
 )
 
 type Req struct {
@@ -23,7 +24,7 @@ type Res struct {
 type Ctx struct {
 	res       *Res
 	req       *Req
-	reqParams map[string]string
+	reqParams map[string]interface{}
 	Params    map[string]string
 	Data      string
 	Error     CtxError
@@ -41,15 +42,20 @@ type ParamConfig struct {
 
 func (c *Ctx) Init() {
 	c.Params = make(map[string]string)
-	c.reqParams = make(map[string]string)
+	c.reqParams = make(map[string]interface{})
 	c.parseParams()
 }
 func (c *Ctx) parseParams() {
 	fmt.Println(c.req.Params)
 	s := c.req.Params
-	s = strings.TrimSpace(s)
-	s = strings.TrimPrefix(s, "{")
-	s = strings.TrimSuffix(s, "}")
+	err := json.Unmarshal([]byte(s), &c.reqParams)
+	if err != nil {
+		c.Error.NewFatal("Params parse error.")
+	}
+	fmt.Println(c.reqParams)
+	// s = strings.TrimSpace(s)
+	// s = strings.TrimPrefix(s, "{")
+	// s = strings.TrimSuffix(s, "}")
 	// kvs := strings.Split(s, ",")
 	// fmt.Println(kvs)
 	// fmt.Println("ReqParamsString:", c.req.Params)
@@ -84,7 +90,8 @@ func (c *Ctx) Set(p *ParamConfig) *Ctx {
 	case p.Required:
 		c.Error.NewFatal("Lack required param.")
 	default:
-		c.Params[p.Key] = c.reqParams[p.Key]
+		// c.Params[p.Key] = string(c.reqParams[p.Key])
+		c.Params[p.Key] = "value"
 	}
 	return c
 }
