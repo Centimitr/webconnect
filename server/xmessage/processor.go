@@ -10,7 +10,7 @@ type Processor struct {
 	Module  string
 	PkgPath string
 	Name    string
-	Func    func(*Req, *Res) []reflect.Value
+	Func    func(*Ctx) []reflect.Value
 }
 
 func registerProcessor(p *Processor) {
@@ -21,7 +21,7 @@ func registerProcessor(p *Processor) {
 	Client use a part of the table's key (usually is ProcessorName) to match a processor.
 	Currently, the key is "PkgName.ProcessorName" so team members should use different package names to do a replacement though their package path is not the same.
 */
-func matchProcessor(suffix string) (func(*Req, *Res) []reflect.Value, error) {
+func matchProcessor(suffix string) (func(*Ctx) []reflect.Value, error) {
 	matchedList := []string{}
 	// key is "PkgName.ProcessorName"
 	for key, _ := range Table {

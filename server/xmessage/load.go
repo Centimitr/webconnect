@@ -25,8 +25,8 @@ func LoadModule(x interface{}) {
 			PkgPath: t.PkgPath(),
 			Module:  t.Name(),
 			Name:    t.Method(i).Name,
-			Func: func(req *Req, res *Res) []reflect.Value {
-				return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(req), reflect.ValueOf(res)})
+			Func: func(ctx *Ctx) []reflect.Value {
+				return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(ctx)})
 			},
 		})
 	}

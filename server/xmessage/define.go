@@ -41,6 +41,11 @@ type CtxError struct {
 func (c *CtxError) NewFatal(info string) {
 	c.Fatal = append(c.Fatal, info)
 }
+func (c *Ctx) Init() {
+	c.Params = make(map[string]string)
+	c.reqParams = make(map[string]string)
+	c.parseParams()
+}
 func (c *Ctx) parseParams() {
 	fmt.Println("ReqParamsString:", c.req.Params)
 	// res.Params
@@ -48,21 +53,10 @@ func (c *Ctx) parseParams() {
 }
 
 func (c *Ctx) Set(p *ParamConfig) *Ctx {
-	// if c.Params == nil {
-	// 	c.parseParams()
-	// }
-	// if p.Required {
-	// 	c.Error.NewFatal("Lack required param.")
-	// 	return c
-	// } else if c.reqParams[p.Key] != nil {
-	// 	c.Params[p.Key] = c.reqParams[p.Key]
-	// } else if p.Default != nil {
-	// 	c.Params[p.Key] = p.Default
-	// }
 	switch {
-	case c.Params == nil:
-		c.parseParams()
-		fallthrough
+	// case c.Params == nil:
+	// 	c.parseParams()
+	// 	fallthrough
 	case p.Default != "":
 		c.Params[p.Key] = p.Default
 	case p.Required:
@@ -72,7 +66,3 @@ func (c *Ctx) Set(p *ParamConfig) *Ctx {
 	}
 	return c
 }
-
-// type Controller func(Req, *Res)
-
-// type Router map[string]Controller
