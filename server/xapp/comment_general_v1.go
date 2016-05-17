@@ -15,5 +15,5 @@ func (m Comment) GetMessages(ctx *msg.Ctx) {
 }
 func init() {
 	var m Comment
-	msg.LoadModule(m)
+	msg.LoadModule(&m)
 }

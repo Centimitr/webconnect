@@ -18,6 +18,7 @@ func do(ws *websocket.Conn, req *Req) {
 		return
 	}
 	f(ctx)
+	ctx.setResParams()
 	// send back
 	resBytes, _ := json.Marshal(*res)
 	if err := websocket.Message.Send(ws, string(resBytes)); err != nil {
