@@ -40,6 +40,7 @@ class WebMessage {
                  }
              }
         };
+        this.listenList = [];
         this._requestOrder = 0;
         this.MAX_WAITING_NUM = 64;
         this.CONTINUE_SEND_REST_DELAY = 10;
@@ -86,6 +87,7 @@ class WebMessage {
             let w = new WebMessageTask((this._requestOrder++) + '.' + method, method, params, data);
         	w.onreceive = (data) =>{
         		w.setResolve();
+        		data.params = JSON.parse(data.params)
             	resolve(data);
             	return;
         	};
@@ -103,6 +105,13 @@ class WebMessage {
         		reject('Promise Timeout.');
         	},this.PROMISE_TIMEOUT);
     	});
+    };
+
+    on(id,callback){
+    	this.listenIdList.push({
+    		id:id,
+    		onreceive:callback
+    	})
     };
 
     clear(){
@@ -132,6 +141,11 @@ class WebMessage {
         	        	w.onreceive(data);
         	        	havntMatch = false;
         	        }
+        	    })
+        	    the.listenIdList.forEach((item,i)=>{
+        	    	if (item.id===data.id) {
+        	    		item.onreceive()
+        	    	}
         	    })
         	};
         	this.websocket.onclose = () =>{};
