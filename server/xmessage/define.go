@@ -25,14 +25,15 @@ type Ctx struct {
 	res       *Res
 	req       *Req
 	reqParams map[string]interface{}
-	Params    map[string]string
+	Params    map[string]interface{}
 	Data      string
 	Error     CtxError
 }
 type ParamConfig struct {
 	Key      string
 	Required bool
-	Default  string
+	Default  interface{}
+	// Type     string
 	// Echo     bool
 }
 
@@ -41,26 +42,18 @@ type ParamConfig struct {
 */
 
 func (c *Ctx) Init() {
-	c.Params = make(map[string]string)
+	c.Params = make(map[string]interface{})
 	c.reqParams = make(map[string]interface{})
 	c.parseParams()
 }
 func (c *Ctx) parseParams() {
-	fmt.Println(c.req.Params)
+	// fmt.Println(c.req.Params)
 	s := c.req.Params
 	err := json.Unmarshal([]byte(s), &c.reqParams)
 	if err != nil {
 		c.Error.NewFatal("Params parse error.")
 	}
-	fmt.Println(c.reqParams)
-	// s = strings.TrimSpace(s)
-	// s = strings.TrimPrefix(s, "{")
-	// s = strings.TrimSuffix(s, "}")
-	// kvs := strings.Split(s, ",")
-	// fmt.Println(kvs)
-	// fmt.Println("ReqParamsString:", c.req.Params)
-	// res.Params
-	// fmt.Println("ReqParams", c.reqParams)
+	// fmt.Println(c.reqParams)
 }
 
 /*
@@ -75,6 +68,9 @@ type CtxError struct {
 func (c *CtxError) NewFatal(info string) {
 	c.Fatal = append(c.Fatal, info)
 }
+func (c *CtxError) NewWarn(info string) {
+	c.Warn = append(c.Warn, info)
+}
 
 /*
 	context methods used in
@@ -82,16 +78,41 @@ func (c *CtxError) NewFatal(info string) {
 
 func (c *Ctx) Set(p *ParamConfig) *Ctx {
 	switch {
-	// case c.Params == nil:
-	// 	c.parseParams()
-	// 	fallthrough
-	case p.Default != "":
+	case p.Default != nil && p.Default != "":
 		c.Params[p.Key] = p.Default
 	case p.Required:
 		c.Error.NewFatal("Lack required param.")
 	default:
-		// c.Params[p.Key] = string(c.reqParams[p.Key])
-		c.Params[p.Key] = "value"
+		c.Params[p.Key] = c.reqParams[p.Key]
+		// c.Params[p.Key] = "value"
 	}
 	return c
+}
+
+func (c *Ctx) GetNumber(key string) int {
+	v, ok := c.Params[key].(float64)
+	if !ok {
+		c.Error.NewFatal(fmt.Sprint(`Param type error, "`, key, `"`, "expected to be int."))
+	}
+	return v
+}
+
+func (c *Ctx) GetString(key string) string {
+	v, ok := c.Params[key].(string)
+	if !ok {
+		c.Error.NewFatal(fmt.Sprint(`Param type error, "`, key, `"`, "expected to be string."))
+	}
+	return v
+}
+
+func (c *Ctx) Get(key string) string {
+	switch c.Params[key].(type) {
+	case string:
+		return c.Params[key].(string)
+	case float64:
+		return fmt.Sprint(c.Params[key].(float64))
+	default:
+		c.Error.NewWarn(fmt.Sprint("Param type error, not a known type."))
+		return fmt.Sprint(c.Params[key])
+	}
 }
