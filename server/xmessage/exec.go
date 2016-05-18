@@ -6,20 +6,30 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-func do(ws *websocket.Conn, req *Req) {
-	// format req
-	res := &Res{Id: req.Id}
-	ctx := &Ctx{res: res, req: req} // use req
+func do(ws *websocket.Conn, reqstr string) {
+	var err error
+
+	// Phase I: initial req,res,ctx
+	var req *Req
+	var res *Res
+	var ctx *Ctx
+	err = json.Unmarshal([]byte(reqstr), req)
+	res = &Res{Id: req.Id}
+	ctx = &Ctx{res: res, req: req}
 	ctx.Init()
-	// match
-	f, err := matchProcessor(req.Method)
+	// Phase II: context processs, match -> process
+	process, err := matchProcessor(req.Method)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	f(ctx)
+	process(ctx)
+
+	// Phase III: response setting
 	ctx.setResParams()
-	// send back
+
+	// Phase IV: response call
+	// websocket response
 	resBytes, _ := json.Marshal(*res)
 	if err := websocket.Message.Send(ws, string(resBytes)); err != nil {
 		fmt.Println("SEND ERROR.")
