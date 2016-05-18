@@ -40,7 +40,7 @@ class WebMessage {
                  }
              }
         };
-        this.listenList = [];
+        this.listenIdList = [];
         this._requestOrder = 0;
         this.MAX_WAITING_NUM = 64;
         this.CONTINUE_SEND_REST_DELAY = 10;
@@ -142,7 +142,7 @@ class WebMessage {
         	        	havntMatch = false;
         	        }
         	    })
-        	    the.listenIdList.forEach((item,i)=>{
+        	    this.listenIdList.forEach((item,i)=>{
         	    	if (item.id===data.id) {
         	    		item.onreceive()
         	    	}

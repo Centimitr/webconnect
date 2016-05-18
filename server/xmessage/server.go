@@ -7,10 +7,10 @@ import (
 func Server(ws *websocket.Conn) {
 	var err error
 	for {
-		var req string
-		if err = websocket.Message.Receive(ws, &req); err != nil {
+		var req Req
+		if err = websocket.JSON.Receive(ws, &req); err != nil {
 			break
 		}
-		go do(ws, req)
+		go do(ws, &req)
 	}
 }

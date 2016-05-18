@@ -7,7 +7,7 @@ import (
 
 type Article struct{}
 
-func (m Article) GetIndexArticles(c *msg.Ctx) {
+func (_ Article) GetIndexArticles(c *msg.Ctx) {
 	c.Set(&msg.ParamConfig{Key: "num", Required: false, Default: "100", Echo: true})
 	c.Set([]*msg.ParamConfig{
 		{Key: "p1", Default: "1"},
@@ -23,7 +23,7 @@ func (m Article) GetIndexArticles(c *msg.Ctx) {
 		fmt.Println(c.Params)
 	}
 }
-func (m Article) GetMessages(ctx *msg.Ctx) {
+func (_ Article) GetMessages(ctx *msg.Ctx) {
 	fmt.Println("M")
 }
 func init() {

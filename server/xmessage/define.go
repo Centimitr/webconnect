@@ -127,13 +127,13 @@ func (c *Ctx) setResParams() {
 		return strings.Replace(s, `"`, `\"`, -1)
 	}
 	// var params []string
-	var stringMapMarshal = func(m map[string]string) string {
-		var kvs []string
-		for k, v := range m {
-			kvs = append(kvs, `"`+toEscaped(k)+`":"`+toEscaped(v)+`"`)
-		}
-		return "{" + strings.Join(kvs, ",") + "}"
-	}
+	// var stringMapMarshal = func(m map[string]string) string {
+	// 	var kvs []string
+	// 	for k, v := range m {
+	// 		kvs = append(kvs, `"`+toEscaped(k)+`":"`+toEscaped(v)+`"`)
+	// 	}
+	// 	return "{" + strings.Join(kvs, ",") + "}"
+	// }
 	var stringMapPartlyMarshal = func(m map[string]string, keys []string) (string, error) {
 		var kvs []string
 		var err error
@@ -146,8 +146,8 @@ func (c *Ctx) setResParams() {
 		}
 		return "{" + strings.Join(kvs, ",") + "}", err
 	}
-	fmt.Println(stringMapMarshal(c.Params))
+	// fmt.Println(stringMapMarshal(c.Params))
 	json, _ := stringMapPartlyMarshal(c.Params, c.echoParams)
-	fmt.Println(json)
+	// fmt.Println(json)
 	c.res.Params = json
 }
