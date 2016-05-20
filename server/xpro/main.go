@@ -10,12 +10,18 @@ import (
 )
 
 func main() {
-	fmt.Println()
-	fmt.Println("TABL:")
-	for _, proc := range msg.Table {
-		fmt.Printf("%20s %10s %30s\n", proc.Name, proc.Module, proc.PkgPath)
-	}
+	// fmt.Printf("%-40s %-10s %-30s\n", "AP", "Module", "Package Path")
+	// for _, proc := range msg.Table {
+	// 	fmt.Printf("%-40s %-10s %-30s\n", proc.Module+"."+proc.Name, proc.Module, proc.PkgPath)
+	// }
+
 	// SERVER
+	m := msg.Ins()
+	fmt.Printf("%-40s %-10s %-30s\n", "API", "Module", "Package Path")
+	for _, proc := range m.ProcessorMap {
+		fmt.Printf("%-40s %-10s %-30s\n", proc.Module+"."+proc.Name, proc.Module, proc.PkgPath)
+	}
+
 	http.Handle("/echo", websocket.Handler(msg.Server))
 	err := http.ListenAndServe(":12345", nil)
 	if err != nil {

@@ -13,9 +13,9 @@ type Processor struct {
 	Func    func(*Ctx) []reflect.Value
 }
 
-func registerProcessor(p *Processor) {
-	Table[p.Module+"."+p.Name] = p
-}
+// func registerProcessor(p *Processor) {
+// 	Table[p.Module+"."+p.Name] = p
+// }
 
 /*
 	Client use a part of the table's key (usually is ProcessorName) to match a processor.
@@ -24,13 +24,13 @@ func registerProcessor(p *Processor) {
 func matchProcessor(suffix string) (func(*Ctx) []reflect.Value, error) {
 	matchedList := []string{}
 	// key is "PkgName.ProcessorName"
-	for key, _ := range Table {
+	for key, _ := range msg.ProcessorMap {
 		if strings.HasSuffix(key, suffix) {
 			matchedList = append(matchedList, key)
 		}
 	}
 	if len(matchedList) == 1 {
-		return Table[matchedList[0]].Func, nil
+		return msg.ProcessorMap[matchedList[0]].Func, nil
 	}
 	return nil, errors.New("Cannot select 1 processor.")
 }

@@ -27,3 +27,4 @@ testem.log
 #System Files
 .DS_Store
 .exe
+*.exe

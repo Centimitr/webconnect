@@ -16,11 +16,11 @@ func (_ Article) GetIndexArticles(c *msg.Ctx) {
 	})
 	if c.Error.Fatal == nil {
 		fmt.Println("No Fatal Error.")
-		p1 := c.Get("num")
-		p2 := c.Get("a")
-		c.Params["a"] = `456"""7"8""9`
-		fmt.Println(p1, p2)
-		fmt.Println(c.Params)
+		// p1 := c.Get("num")
+		// p2 := c.Get("a")
+		// c.Params["a"] = `456"""7"8""9`
+		// fmt.Println(p1, p2)
+		// fmt.Println(c.Params)
 	}
 }
 func (_ Article) GetMessages(ctx *msg.Ctx) {
@@ -28,5 +28,5 @@ func (_ Article) GetMessages(ctx *msg.Ctx) {
 }
 func init() {
 	var m Article
-	msg.LoadModule(&m)
+	msg.LoadModule(m)
 }
