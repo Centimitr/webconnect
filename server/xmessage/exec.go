@@ -9,36 +9,46 @@ import (
 )
 
 func (m *Msg) do(ws *websocket.Conn, req *Req) {
-	var err error
+	// var err error
 
+	// Phase I: AfterReceive
+	// - initial context and response
+	// m.AfterReceive() <- global
 	stat.Stat.AddRequest(req.Method)
-	// Phase I: initial req,res,ctx
-	// err = json.Unmarshal([]byte(reqstr), req)
 	res := &Res{Id: req.Id, Method: req.Method}
 	ctx := &Ctx{res: res, req: req}
 	ctx.Init()
-	// Phase II: context processs, match -> process
-	process, err := m.matchProcessor(req.Method)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+
+	// Phase II: BeforeProcess
+	// - provide chance to manipulate context object for middlewares
+	// m.BeforeProcess() <- context
+
+	// Phase III: Process
+	// - match and select processor, and then execute it on ctx
+	process, _ := m.matchProcessor(req.Method)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 	process(ctx)
 
-	// Phase III: response setting
+	// Phase IV: AfterProcess
+	// - mainly do response relative tasks
+	// m.AfterProcess() <- context
 	ctx.setResParams()
 
-	// Phase IV: response call
-	// websocket response
+	// Phase V: BeforeSend
+	// m.BeforeSend() <- global
+
+	// Phase VI: Send
+	// - send
 	if err := websocket.JSON.Send(ws, res); err != nil {
 		fmt.Println("SEND ERROR.")
 		return
 	}
+
+	// Phase VI: AfterSend
+	// m.AfterSend() <- global
 	stat.Stat.AddResponse(res.Method)
 	stat.Stat.Get()
-	// resBytes, _ := json.Marshal(*res)
-	// if err := websocket.Message.Send(ws, string(resBytes)); err != nil {
-	// 	fmt.Println("SEND ERROR.")
-	// 	return
-	// }
 }

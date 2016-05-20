@@ -146,8 +146,6 @@ func (c *Ctx) setResParams() {
 		}
 		return "{" + strings.Join(kvs, ",") + "}", err
 	}
-	// fmt.Println(stringMapMarshal(c.Params))
 	json, _ := stringMapPartlyMarshal(c.Params, c.echoParams)
-	// fmt.Println(json)
 	c.res.Params = json
 }
