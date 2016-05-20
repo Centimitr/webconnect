@@ -1,9 +1,9 @@
 package xmessage
 
 import (
-	// "fmt"
-	"reflect"
-	// "strings"
+// "fmt"
+// "reflect"
+// "strings"
 )
 
 // var Table map[string]*Processor
@@ -12,30 +12,30 @@ import (
 // 	Table = make(map[string]*Processor)
 // }
 
-// module packages use LoadModule to load itselft
-func LoadModule(x interface{}) {
-	v := reflect.ValueOf(x)
-	t := v.Type()
-	for i := 0; i < v.NumMethod(); i++ {
-		index := i
-		// registerProcessor(&Processor{
-		// 	PkgPath: t.PkgPath(),
-		// 	Module:  t.Name(),
-		// 	Name:    t.Method(i).Name,
-		// 	Func: func(ctx *Ctx) []reflect.Value {
-		// 		return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(ctx)})
-		// 	},
-		// })
-		msg.LoadModule(&Processor{
-			PkgPath: t.PkgPath(),
-			Module:  t.Name(),
-			Name:    t.Method(i).Name,
-			Func: func(ctx *Ctx) []reflect.Value {
-				return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(ctx)})
-			},
-		})
-	}
-}
+// // module packages use LoadModule to load itselft
+// func LoadModule(x interface{}) {
+// 	v := reflect.ValueOf(x)
+// 	t := v.Type()
+// 	for i := 0; i < v.NumMethod(); i++ {
+// 		index := i
+// 		// registerProcessor(&Processor{
+// 		// 	PkgPath: t.PkgPath(),
+// 		// 	Module:  t.Name(),
+// 		// 	Name:    t.Method(i).Name,
+// 		// 	Func: func(ctx *Ctx) []reflect.Value {
+// 		// 		return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(ctx)})
+// 		// 	},
+// 		// })
+// 		msg.LoadModule(&Processor{
+// 			PkgPath: t.PkgPath(),
+// 			Module:  t.Name(),
+// 			Name:    t.Method(i).Name,
+// 			Func: func(ctx *Ctx) []reflect.Value {
+// 				return t.Method(index).Func.Call([]reflect.Value{v, reflect.ValueOf(ctx)})
+// 			},
+// 		})
+// 	}
+// }
 
 // // middleware packages use LoadMiddleware to load itself
 // func LoadMiddleware(x interface{}) {

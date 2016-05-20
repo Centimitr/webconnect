@@ -8,7 +8,7 @@ import (
 	// "sync"
 )
 
-func do(ws *websocket.Conn, req *Req) {
+func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	var err error
 
 	stat.Stat.AddRequest(req.Method)
@@ -18,7 +18,7 @@ func do(ws *websocket.Conn, req *Req) {
 	ctx := &Ctx{res: res, req: req}
 	ctx.Init()
 	// Phase II: context processs, match -> process
-	process, err := matchProcessor(req.Method)
+	process, err := m.matchProcessor(req.Method)
 	if err != nil {
 		fmt.Println(err)
 		return
