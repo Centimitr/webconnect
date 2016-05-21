@@ -6,6 +6,8 @@ import (
 
 var MIDDLEWARE_STAGE_LIST = []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"}
 
+type middlewareList map[string]middlewareListItem
+
 type middlewareListItem struct {
 	Value interface{}
 	// Support struct {
@@ -24,7 +26,7 @@ type Msg struct {
 	// BeforeSendList    []func()
 	// AfterSendList     []func()
 	Middleware struct {
-		List map[string]middlewareListItem
+		List middlewareList
 		// Func [5]reflect.
 		// AfterReceiveFunc  []func()
 		// BeforeProcessFunc []func()
@@ -55,13 +57,18 @@ var msg *Msg
 
 func init() {
 	msg = &Msg{
-		Middleware: {
-			{
-
-				List:         make(map[string]middlewareListItem),
-				ProcessorMap: make(map[string]*Processor),
-			},
+		Middleware: struct {
+			List map[string]middlewareListItem
+			// Func [5]reflect.
+			// AfterReceiveFunc  []func()
+			// BeforeProcessFunc []func()
+			// AfterProcessFunc  []func()
+			// BeforeSendFunc    []func()
+			// AfterSendFunc     []func()
+		}{
+			List: make(map[string]middlewareListItem),
 		},
+		ProcessorMap: make(map[string]*Processor),
 	}
 }
 
