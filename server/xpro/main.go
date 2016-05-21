@@ -6,10 +6,11 @@ import (
 	msg "github.com/Centimitr/xmessage"
 
 	// middlewares
-	_ "github.com/Centimitr/xapp"
+	_ "github.com/Centimitr/xcache"
+	_ "github.com/Centimitr/xstatistics"
 
 	// processor modules
-	_ "github.com/Centimitr/xstatistics"
+	_ "github.com/Centimitr/xapp"
 
 	// system library
 	"fmt"
