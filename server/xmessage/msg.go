@@ -4,36 +4,51 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-var MIDDLEWARE_STAGE_LIST = []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"}
+// var MIDDLEWARE_STAGES = []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"}
 
-type middlewareList map[string]middlewareListItem
+// type middlewareMapItem struct {
+// 	Value   interface{}
+// 	Support struct {
+// 		AfterReceive  bool
+// 		BeforeProcess bool
+// 		AfterProcess  bool
+// 		BeforeSend    bool
+// 		AfterSend     bool
+// 	}
+// }
 
-type middlewareListItem struct {
-	Value interface{}
-	// Support struct {
-	// 	AfterReceive  bool
-	// 	BeforeProcess bool
-	// 	AfterProcess  bool
-	// 	BeforeSend    bool
-	// 	AfterSend     bool
-	// }
+// type middlewareMap map[string]struct {
+// 	Value   interface{}
+// 	Support struct {
+// 		AfterReceive  bool
+// 		BeforeProcess bool
+// 		AfterProcess  bool
+// 		BeforeSend    bool
+// 		AfterSend     bool
+// 	}
+// }
+
+type middlewareSupport struct {
+	Name          string
+	AfterReceive  bool
+	BeforeProcess bool
+	AfterProcess  bool
+	BeforeSend    bool
+	AfterSend     bool
+}
+
+type middleware struct {
+	Map               map[string]interface{}
+	Support           []middlewareSupport
+	AfterReceiveFunc  []func()
+	BeforeProcessFunc []func()
+	AfterProcessFunc  []func()
+	BeforeSendFunc    []func()
+	AfterSendFunc     []func()
 }
 
 type Msg struct {
-	// AfterReceiveList  []func()
-	// BeforeProcessList []func()
-	// AfterProcessList  []func()
-	// BeforeSendList    []func()
-	// AfterSendList     []func()
-	Middleware struct {
-		List middlewareList
-		// Func [5]reflect.
-		// AfterReceiveFunc  []func()
-		// BeforeProcessFunc []func()
-		// AfterProcessFunc  []func()
-		// BeforeSendFunc    []func()
-		// AfterSendFunc     []func()
-	}
+	Middleware   middleware
 	ProcessorMap map[string]*Processor
 }
 
@@ -57,16 +72,8 @@ var msg *Msg
 
 func init() {
 	msg = &Msg{
-		Middleware: struct {
-			List map[string]middlewareListItem
-			// Func [5]reflect.
-			// AfterReceiveFunc  []func()
-			// BeforeProcessFunc []func()
-			// AfterProcessFunc  []func()
-			// BeforeSendFunc    []func()
-			// AfterSendFunc     []func()
-		}{
-			List: make(map[string]middlewareListItem),
+		Middleware: middleware{
+			Map: make(map[string]interface{}),
 		},
 		ProcessorMap: make(map[string]*Processor),
 	}
