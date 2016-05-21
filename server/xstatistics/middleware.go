@@ -1,6 +1,8 @@
-package statistics
+package xstatistics
 
 import (
+	msg "github.com/Centimitr/xmessage"
+
 	"fmt"
 	"sync"
 )
@@ -16,7 +18,11 @@ type StatisticsMap struct {
 	methodMap map[string]*StatisticsItem
 }
 
-func (s *StatisticsMap) AddRequest(method string) {
+/*
+	private methods
+*/
+
+func (s *StatisticsMap) addRequest(method string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if _, ok := s.methodMap[method]; ok {
@@ -29,7 +35,7 @@ func (s *StatisticsMap) AddRequest(method string) {
 	}
 }
 
-func (s *StatisticsMap) AddResponse(method string) {
+func (s *StatisticsMap) addResponse(method string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if _, ok := s.methodMap[method]; ok {
@@ -42,7 +48,7 @@ func (s *StatisticsMap) AddResponse(method string) {
 	}
 }
 
-func (s *StatisticsMap) Get() {
+func (s *StatisticsMap) get() {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 	for k, item := range s.methodMap {
@@ -50,10 +56,49 @@ func (s *StatisticsMap) Get() {
 	}
 }
 
-var Stat *StatisticsMap
+/*
+	public methods used in processors
+*/
+func (s *StatisticsMap) Get() {
+	s.get()
+}
+
+/*
+	middleware hooked methods
+*/
+
+func (s StatisticsMap) AfterReceive() {
+	s.addRequest("req")
+}
+
+func (s StatisticsMap) BeforeProcess() {
+
+}
+
+func (s StatisticsMap) AfterProcess() {
+
+}
+
+func (s StatisticsMap) BeforeSend() {
+
+}
+
+func (s StatisticsMap) AfterSend() {
+	s.addResponse("res")
+}
+
+/*
+	init
+*/
+
+type Statistcs struct {
+	StatisticsMap
+}
 
 func init() {
-	Stat = &StatisticsMap{
-		methodMap: make(map[string]*StatisticsItem),
-	}
+	msg.LoadMiddleware(Statistcs{
+		StatisticsMap{
+			methodMap: make(map[string]*StatisticsItem),
+		},
+	})
 }

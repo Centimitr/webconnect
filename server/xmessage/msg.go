@@ -4,14 +4,35 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+var MIDDLEWARE_STAGE_LIST = []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"}
+
+type middlewareListItem struct {
+	Value interface{}
+	// Support struct {
+	// 	AfterReceive  bool
+	// 	BeforeProcess bool
+	// 	AfterProcess  bool
+	// 	BeforeSend    bool
+	// 	AfterSend     bool
+	// }
+}
+
 type Msg struct {
+	// AfterReceiveList  []func()
+	// BeforeProcessList []func()
+	// AfterProcessList  []func()
+	// BeforeSendList    []func()
+	// AfterSendList     []func()
+	Middleware struct {
+		List map[string]middlewareListItem
+		// Func [5]reflect.
+		// AfterReceiveFunc  []func()
+		// BeforeProcessFunc []func()
+		// AfterProcessFunc  []func()
+		// BeforeSendFunc    []func()
+		// AfterSendFunc     []func()
+	}
 	ProcessorMap map[string]*Processor
-	// MiddlewareList    map[string][]func()
-	AfterReceiveList  []func()
-	BeforeProcessList []func()
-	AfterProcessList  []func()
-	BeforeSendList    []func()
-	AfterSendList     []func()
 }
 
 // return a http.Handler
@@ -34,7 +55,13 @@ var msg *Msg
 
 func init() {
 	msg = &Msg{
-		ProcessorMap: make(map[string]*Processor),
+		Middleware: {
+			{
+
+				List:         make(map[string]middlewareListItem),
+				ProcessorMap: make(map[string]*Processor),
+			},
+		},
 	}
 }
 
