@@ -1,0 +1,9 @@
+Middleware                               AR         BP         AP         BS         AS        
+Cache                                    false      true       true       false      false     
+Statistcs                                true       true       true       true       true      
+
+API                                      Module     Package Path                            
+Article.GetIndexArticles                 Article    github.com/Centimitr/xapp     
+Article.GetMessages                      Article    github.com/Centimitr/xapp     
+Comment.GetIndexComments                 Comment    github.com/Centimitr/xapp     
+Comment.GetMessages                      Comment    github.com/Centimitr/xapp     

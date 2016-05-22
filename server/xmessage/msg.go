@@ -20,7 +20,7 @@ type middleware struct {
 	BeforeProcessFunc []func(*Ctx)
 	AfterProcessFunc  []func(*Ctx)
 	BeforeSendFunc    []func(*Res)
-	AfterSendFunc     []func()
+	AfterSendFunc     []func(*Res)
 }
 
 type Msg struct {

@@ -7,17 +7,22 @@
 		<script>
 		// have a try
 		var c = new WebMessage('ws://localhost:12345/echo');
-		let i = 10;
-		var s = 0, f = 0;
-		while (i--) {
-			c.do('GetIndexArticles',{a:1,b:2,c:3,time: Date.now()},{d:4,f:5}).then((json)=>{
-				console.log('--USER: Response received.');
-				s++;
-			},(error)=>{
-				console.log('--USER: Receive error:',error);
-				f++;
-			});
-		}
+		// let i = 10;
+		// var s = 0, f = 0;
+		// while (i--) {
+		// 	c.do('GetIndexArticles',{a:1,b:2,c:3,time: Date.now()},{d:4,f:5}).then((json)=>{
+		// 		console.log('--USER: Response received.');
+		// 		s++;
+		// 	},(error)=>{
+		// 		console.log('--USER: Receive error:',error);
+		// 		f++;
+		// 	});
+		// }
+		c.do('PrintStat',{},{}).then((json)=>{
+			console.log("Ok.",json)
+		},(error)=>{
+			console.log(error)
+		})
 		</script>
 	</body>
 </html>

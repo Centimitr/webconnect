@@ -27,7 +27,7 @@ func (s *StatisticsMap) addRequest(method string) {
 		s.methodMap[method].RequestTimes++
 	} else {
 		s.methodMap[method] = &StatisticsItem{
-			RequestTimes:  0,
+			RequestTimes:  1,
 			ResponseTimes: 0,
 		}
 	}
@@ -39,9 +39,10 @@ func (s *StatisticsMap) addResponse(method string) {
 	if _, ok := s.methodMap[method]; ok {
 		s.methodMap[method].ResponseTimes++
 	} else {
+		// not to report error is for realtime usage situation
 		s.methodMap[method] = &StatisticsItem{
 			RequestTimes:  0,
-			ResponseTimes: 0,
+			ResponseTimes: 1,
 		}
 	}
 }
@@ -50,6 +51,6 @@ func (s *StatisticsMap) get() {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 	for k, item := range s.methodMap {
-		fmt.Println(k, item.RequestTimes, item.ResponseTimes)
+		fmt.Println(k, "ReqTimes:", item.RequestTimes, "ResTimes:", item.ResponseTimes)
 	}
 }

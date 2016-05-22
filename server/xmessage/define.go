@@ -27,6 +27,7 @@ type Ctx struct {
 	req        *Req
 	reqParams  map[string]interface{}
 	echoParams []string
+	Middleware map[string]interface{}
 	Params     map[string]string
 	Data       string
 	Error      CtxError
@@ -60,6 +61,7 @@ func (c *CtxError) NewWarn(info string) {
 */
 
 func (c *Ctx) Init() {
+	c.Middleware = msg.Middleware.Map
 	c.Params = make(map[string]string)
 	c.reqParams = make(map[string]interface{})
 	c.parseParams()

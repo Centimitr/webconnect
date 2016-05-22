@@ -15,7 +15,6 @@ func (m *Msg) loadMiddleware(x interface{}) {
 		Name: middlewareName,
 	}
 	for _, name := range []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"} {
-		// for i, name := range MIDDLEWARE_STAGE_LIST {
 		if method, ok := t.MethodByName(name); ok {
 			switch name {
 			case "AfterReceive":
@@ -40,8 +39,8 @@ func (m *Msg) loadMiddleware(x interface{}) {
 				})
 			case "AfterSend":
 				support.AfterSend = true
-				m.Middleware.AfterSendFunc = append(m.Middleware.AfterSendFunc, func() {
-					method.Func.Call([]reflect.Value{v})
+				m.Middleware.AfterSendFunc = append(m.Middleware.AfterSendFunc, func(res *Res) {
+					method.Func.Call([]reflect.Value{v, reflect.ValueOf(res)})
 				})
 			default:
 				fmt.Println("Middleware load logic error.")
@@ -79,8 +78,8 @@ func (m *Msg) BeforeSend(res *Res) {
 	}
 }
 
-func (m *Msg) AfterSend() {
+func (m *Msg) AfterSend(res *Res) {
 	for _, fn := range m.Middleware.AfterSendFunc {
-		fn()
+		fn(res)
 	}
 }

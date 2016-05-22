@@ -13,11 +13,9 @@ func (s StatisticsMap) AfterReceive(req *msg.Req) {
 }
 
 func (s StatisticsMap) BeforeProcess(ctx *msg.Ctx) {
-
 }
 
 func (s StatisticsMap) AfterProcess(ctx *msg.Ctx) {
-
 }
 
 func (s StatisticsMap) BeforeSend(res *msg.Res) {
@@ -26,19 +24,19 @@ func (s StatisticsMap) BeforeSend(res *msg.Res) {
 
 func (s StatisticsMap) AfterSend(res *msg.Res) {
 	s.addResponse(res.Method)
-	s.get()
 }
 
 /*
 	init
 */
 
-type Statistcs struct {
+// use struct Statistics to combime the middleware, so Statistics is the middleware name.
+type Statistics struct {
 	StatisticsMap
 }
 
 func init() {
-	msg.LoadMiddleware(Statistcs{
+	msg.LoadMiddleware(Statistics{
 		StatisticsMap{
 			methodMap: make(map[string]*StatisticsItem),
 		},

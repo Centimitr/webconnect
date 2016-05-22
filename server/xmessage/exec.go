@@ -12,8 +12,6 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	// Phase I: AfterReceive
 	// - global, req relative methods
 	m.AfterReceive(req)
-	// m.AfterReceive() <- global
-	// stat.Stat.AddRequest(req.Method)
 	// - initial context and response
 	res := &Res{Id: req.Id, Method: req.Method}
 	ctx := &Ctx{res: res, req: req}
@@ -50,7 +48,5 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	}
 
 	// Phase VI: AfterSend
-	m.AfterSend()
-	// stat.Stat.AddResponse(res.Method)
-	// stat.Stat.Get()
+	m.AfterSend(res)
 }
