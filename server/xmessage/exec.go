@@ -45,7 +45,7 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	// Phase VI: Send
 	// - send
 	if err := websocket.JSON.Send(ws, res); err != nil {
-		fmt.Println("SEND ERROR.")
+		fmt.Println("SEND ERROR.", err)
 		return
 	}
 

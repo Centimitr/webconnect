@@ -9,19 +9,14 @@ import (
 func (m *Msg) loadMiddleware(x interface{}) {
 	v := reflect.ValueOf(x)
 	t := v.Type()
-	// fmt.Println(t.Name())
 	middlewareName := t.Name()
 	m.Middleware.Map[middlewareName] = x
 	var support = middlewareSupport{
 		Name: middlewareName,
 	}
-	// m.Middleware.List[middlewareName].Value = x
 	for _, name := range []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"} {
 		// for i, name := range MIDDLEWARE_STAGE_LIST {
 		if method, ok := t.MethodByName(name); ok {
-			// fn := func() {
-			// 	method.Func.Call([]reflect.Value{v})
-			// }
 			switch name {
 			case "AfterReceive":
 				support.AfterReceive = true
