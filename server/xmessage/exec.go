@@ -1,44 +1,56 @@
 package xmessage
 
 import (
-	// "encoding/json"
 	"fmt"
-	stat "github.com/Centimitr/xmessage/statistics"
+	// stat "github.com/Centimitr/xmessage/statistics"
 	"golang.org/x/net/websocket"
-	// "sync"
 )
 
-func do(ws *websocket.Conn, req *Req) {
-	var err error
+func (m *Msg) do(ws *websocket.Conn, req *Req) {
+	// var err error
 
-	stat.Stat.AddRequest(req.Method)
-	// Phase I: initial req,res,ctx
-	// err = json.Unmarshal([]byte(reqstr), req)
+	// Phase I: AfterReceive
+	// - global, req relative methods
+	m.AfterReceive(req)
+	// m.AfterReceive() <- global
+	// stat.Stat.AddRequest(req.Method)
+	// - initial context and response
 	res := &Res{Id: req.Id, Method: req.Method}
 	ctx := &Ctx{res: res, req: req}
 	ctx.Init()
-	// Phase II: context processs, match -> process
-	process, err := matchProcessor(req.Method)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	process(ctx)
 
-	// Phase III: response setting
-	ctx.setResParams()
+	// Phase II: BeforeProcess
+	// - global, ctx relative methods
+	// - provide chance to manipulate context object for middlewares
+	m.BeforeProcess(ctx)
 
-	// Phase IV: response call
-	// websocket response
-	if err := websocket.JSON.Send(ws, res); err != nil {
-		fmt.Println("SEND ERROR.")
-		return
-	}
-	stat.Stat.AddResponse(res.Method)
-	stat.Stat.Get()
-	// resBytes, _ := json.Marshal(*res)
-	// if err := websocket.Message.Send(ws, string(resBytes)); err != nil {
-	// 	fmt.Println("SEND ERROR.")
+	// Phase III: Process
+	// - match and select processor, and then execute it on ctx
+	process, _ := m.matchProcessor(req.Method)
+	// if err != nil {
+	// 	fmt.Println(err)
 	// 	return
 	// }
+	process(ctx)
+
+	// Phase IV: AfterProcess
+	// - global, ctx relative methods
+	m.AfterProcess(ctx)
+	// - mainly do response relative tasks
+	ctx.setResParams()
+
+	// Phase V: BeforeSend
+	m.BeforeSend(res)
+
+	// Phase VI: Send
+	// - send
+	if err := websocket.JSON.Send(ws, res); err != nil {
+		fmt.Println("SEND ERROR.", err)
+		return
+	}
+
+	// Phase VI: AfterSend
+	m.AfterSend()
+	// stat.Stat.AddResponse(res.Method)
+	// stat.Stat.Get()
 }

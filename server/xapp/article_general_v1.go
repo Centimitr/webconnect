@@ -28,5 +28,5 @@ func (_ Article) GetMessages(ctx *msg.Ctx) {
 }
 func init() {
 	var m Article
-	msg.LoadModule(&m)
+	msg.LoadModule(m)
 }
