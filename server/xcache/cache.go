@@ -6,11 +6,11 @@ import (
 
 type Cache struct{}
 
-func (c Cache) BeforeProcess() {
+func (c Cache) BeforeProcess(ctx *msg.Ctx) {
 
 }
 
-func (c Cache) AfterProcess() {
+func (c Cache) AfterProcess(ctx *msg.Ctx) {
 
 }
 

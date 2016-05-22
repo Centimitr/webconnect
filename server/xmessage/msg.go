@@ -4,30 +4,6 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-// var MIDDLEWARE_STAGES = []string{"AfterReceive", "BeforeProcess", "AfterProcess", "BeforeSend", "AfterSend"}
-
-// type middlewareMapItem struct {
-// 	Value   interface{}
-// 	Support struct {
-// 		AfterReceive  bool
-// 		BeforeProcess bool
-// 		AfterProcess  bool
-// 		BeforeSend    bool
-// 		AfterSend     bool
-// 	}
-// }
-
-// type middlewareMap map[string]struct {
-// 	Value   interface{}
-// 	Support struct {
-// 		AfterReceive  bool
-// 		BeforeProcess bool
-// 		AfterProcess  bool
-// 		BeforeSend    bool
-// 		AfterSend     bool
-// 	}
-// }
-
 type middlewareSupport struct {
 	Name          string
 	AfterReceive  bool
@@ -40,10 +16,10 @@ type middlewareSupport struct {
 type middleware struct {
 	Map               map[string]interface{}
 	Support           []middlewareSupport
-	AfterReceiveFunc  []func()
-	BeforeProcessFunc []func()
-	AfterProcessFunc  []func()
-	BeforeSendFunc    []func()
+	AfterReceiveFunc  []func(*Req)
+	BeforeProcessFunc []func(*Ctx)
+	AfterProcessFunc  []func(*Ctx)
+	BeforeSendFunc    []func(*Res)
 	AfterSendFunc     []func()
 }
 

@@ -1,27 +1,28 @@
 package xmessage
 
 import (
-	// "encoding/json"
 	"fmt"
-	stat "github.com/Centimitr/xmessage/statistics"
+	// stat "github.com/Centimitr/xmessage/statistics"
 	"golang.org/x/net/websocket"
-	// "sync"
 )
 
 func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	// var err error
 
 	// Phase I: AfterReceive
-	// - initial context and response
+	// - global, req relative methods
+	m.AfterReceive(req)
 	// m.AfterReceive() <- global
-	stat.Stat.AddRequest(req.Method)
+	// stat.Stat.AddRequest(req.Method)
+	// - initial context and response
 	res := &Res{Id: req.Id, Method: req.Method}
 	ctx := &Ctx{res: res, req: req}
 	ctx.Init()
 
 	// Phase II: BeforeProcess
+	// - global, ctx relative methods
 	// - provide chance to manipulate context object for middlewares
-	// m.BeforeProcess() <- context
+	m.BeforeProcess(ctx)
 
 	// Phase III: Process
 	// - match and select processor, and then execute it on ctx
@@ -33,12 +34,13 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	process(ctx)
 
 	// Phase IV: AfterProcess
+	// - global, ctx relative methods
+	m.AfterProcess(ctx)
 	// - mainly do response relative tasks
-	// m.AfterProcess() <- context
 	ctx.setResParams()
 
 	// Phase V: BeforeSend
-	// m.BeforeSend() <- global
+	m.BeforeSend(res)
 
 	// Phase VI: Send
 	// - send
@@ -48,7 +50,7 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	}
 
 	// Phase VI: AfterSend
-	// m.AfterSend() <- global
-	stat.Stat.AddResponse(res.Method)
-	stat.Stat.Get()
+	m.AfterSend()
+	// stat.Stat.AddResponse(res.Method)
+	// stat.Stat.Get()
 }
