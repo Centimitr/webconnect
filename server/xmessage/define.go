@@ -27,6 +27,7 @@ type Ctx struct {
 	req        *Req
 	reqParams  map[string]interface{}
 	echoParams []string
+	Method     string
 	Middleware map[string]interface{}
 	Params     map[string]string
 	Data       string

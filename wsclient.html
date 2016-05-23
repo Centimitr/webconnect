@@ -18,7 +18,13 @@
 		// 		f++;
 		// 	});
 		// }
-		c.do('PrintStat',{},{}).then((json)=>{
+		c.do('TestJSONBaseLoad',{},{}).then((json)=>{
+			console.log("Ok.",json)
+		},(error)=>{
+			console.log(error)
+		})
+
+		c.do('TestJSONBaseSave',{},{a:1,b:2,c:3}).then((json)=>{
 			console.log("Ok.",json)
 		},(error)=>{
 			console.log(error)

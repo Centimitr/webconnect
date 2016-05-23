@@ -14,7 +14,7 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 	m.AfterReceive(req)
 	// - initial context and response
 	res := &Res{Id: req.Id, Method: req.Method}
-	ctx := &Ctx{res: res, req: req}
+	ctx := &Ctx{res: res, req: req, Method: req.Method}
 	ctx.Init()
 
 	// Phase II: BeforeProcess

@@ -7,6 +7,7 @@ import (
 
 	// middlewares
 	_ "github.com/Centimitr/xcache"
+	_ "github.com/Centimitr/xjsonbase"
 	_ "github.com/Centimitr/xstatistics"
 
 	// processor modules
@@ -14,17 +15,20 @@ import (
 
 	// system library
 	"fmt"
-	// "golang.org/x/net/websocket"
-	// "net/http"
+	"golang.org/x/net/websocket"
+	"net/http"
 )
 
 func main() {
 
 	m := msg.Ins()
 
-	fmt.Printf("\n %-35s %-15s %-15s %-15s\n", "Config", "Name", "Key", "Value")
+	fmt.Println()
+	fmt.Println(" Loading...")
+
+	fmt.Printf("\n %-35s %-21s %-10s %-10s\n", "Config", "Name", "Key", "Value")
 	for _, config := range m.Config.Middleware {
-		fmt.Printf(" %-35s %-15s %-15s %-15s\n", "Middleware", config.Name, config.Key, config.Value)
+		fmt.Printf(" %-35s %-21s %-10s %-10s\n", "Middleware", config.Name, config.Key, config.Value)
 	}
 
 	fmt.Printf("\n %-35s %-10s %-10s %-10s %-10s %-10s\n", "Middleware", "AR", "BP", "AP", "BS", "AS")
@@ -36,12 +40,14 @@ func main() {
 	for _, proc := range m.ProcessorMap {
 		fmt.Printf(" %-35s %-10s %-40s\n", proc.Module+"."+proc.Name, proc.Module, proc.PkgPath)
 	}
-
 	fmt.Println()
+
 	// SERVER
-	// http.Handle("/echo", websocket.Handler(m.Server))
-	// err := http.ListenAndServe(":12345", nil)
-	// if err != nil {
-	// 	panic("ListenAndServe: " + err.Error())
-	// }
+	fmt.Println(" Running...")
+	fmt.Println()
+	http.Handle("/echo", websocket.Handler(m.Server))
+	err := http.ListenAndServe(":12345", nil)
+	if err != nil {
+		panic("ListenAndServe: " + err.Error())
+	}
 }
