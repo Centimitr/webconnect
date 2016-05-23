@@ -14,13 +14,18 @@ import (
 
 	// system library
 	"fmt"
-	"golang.org/x/net/websocket"
-	"net/http"
+	// "golang.org/x/net/websocket"
+	// "net/http"
 )
 
 func main() {
 
 	m := msg.Ins()
+
+	fmt.Printf("\n %-35s %-15s %-15s %-15s\n", "Config", "Name", "Key", "Value")
+	for _, config := range m.Config.Middleware {
+		fmt.Printf(" %-35s %-15s %-15s %-15s\n", "Middleware", config.Name, config.Key, config.Value)
+	}
 
 	fmt.Printf("\n %-35s %-10s %-10s %-10s %-10s %-10s\n", "Middleware", "AR", "BP", "AP", "BS", "AS")
 	for _, m := range m.Middleware.Support {
@@ -34,9 +39,9 @@ func main() {
 
 	fmt.Println()
 	// SERVER
-	http.Handle("/echo", websocket.Handler(m.Server))
-	err := http.ListenAndServe(":12345", nil)
-	if err != nil {
-		panic("ListenAndServe: " + err.Error())
-	}
+	// http.Handle("/echo", websocket.Handler(m.Server))
+	// err := http.ListenAndServe(":12345", nil)
+	// if err != nil {
+	// 	panic("ListenAndServe: " + err.Error())
+	// }
 }

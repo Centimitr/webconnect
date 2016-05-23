@@ -1,8 +1,21 @@
 package xmessage
 
 import (
+	"encoding/json"
+	"fmt"
 	"golang.org/x/net/websocket"
+	"io/ioutil"
 )
+
+type middlewareConfig struct {
+	Name  string `json:"name"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type config struct {
+	Middleware []middlewareConfig `json:"middleware"`
+}
 
 type middlewareSupport struct {
 	Name          string
@@ -24,6 +37,7 @@ type middleware struct {
 }
 
 type Msg struct {
+	Config       config
 	Middleware   middleware
 	ProcessorMap map[string]*Processor
 }
@@ -40,6 +54,18 @@ func (m *Msg) Server(ws *websocket.Conn) {
 	}
 }
 
+func (m *Msg) loadConfig() {
+	var err error
+	data, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		fmt.Println("Read config file error:", err)
+	}
+	err = json.Unmarshal(data, &m.Config)
+	if err != nil {
+		fmt.Println("Unmarshal config file content error:", err)
+	}
+}
+
 /*
 	init
 */
@@ -53,6 +79,7 @@ func init() {
 		},
 		ProcessorMap: make(map[string]*Processor),
 	}
+	msg.loadConfig()
 }
 
 /*

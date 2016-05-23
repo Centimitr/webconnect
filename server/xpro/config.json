@@ -1,0 +1,13 @@
+{
+	"Middleware":[
+		{
+			"name":"JSONBase",
+			"key":"path",
+			"value":"x:\\json\\"
+		},{
+			"name":"Statistics",
+			"key":"a",
+			"value":"true"
+		}
+	]
+}
