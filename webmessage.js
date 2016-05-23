@@ -87,7 +87,8 @@ class WebMessage {
             let w = new WebMessageTask((this._requestOrder++) + '.' + method, method, params, data);
         	w.onreceive = (data) =>{
         		w.setResolve();
-        		data.params = JSON.parse(data.params)
+                data.params = JSON.parse(data.params)
+                data.data = JSON.parse(data.data)
             	resolve(data);
             	return;
         	};

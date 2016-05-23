@@ -3,18 +3,19 @@ package xmessage
 import (
 	"fmt"
 	// stat "github.com/Centimitr/xmessage/statistics"
+	"encoding/json"
 	"golang.org/x/net/websocket"
 )
 
 func (m *Msg) do(ws *websocket.Conn, req *Req) {
-	// var err error
+	var err error
 
 	// Phase I: AfterReceive
 	// - global, req relative methods
 	m.AfterReceive(req)
 	// - initial context and response
 	res := &Res{Id: req.Id, Method: req.Method}
-	ctx := &Ctx{res: res, req: req, Method: req.Method}
+	ctx := &Ctx{res: res, req: req, Method: req.Method, Data: req.Data}
 	ctx.Init()
 
 	// Phase II: BeforeProcess
@@ -24,17 +25,23 @@ func (m *Msg) do(ws *websocket.Conn, req *Req) {
 
 	// Phase III: Process
 	// - match and select processor, and then execute it on ctx
-	process, _ := m.matchProcessor(req.Method)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
+	process, err := m.matchProcessor(req.Method)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	process(ctx)
 
 	// Phase IV: AfterProcess
 	// - global, ctx relative methods
 	m.AfterProcess(ctx)
 	// - mainly do response relative tasks
+	// res.Data = ctx.Data
+	data, err := json.Marshal(ctx.Data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	res.Data = string(data)
 	ctx.setResParams()
 
 	// Phase V: BeforeSend

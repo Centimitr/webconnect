@@ -8,7 +8,7 @@ import (
 
 func (j *JSONBase) Load(c *msg.Ctx) {
 	filename := c.Method
-	data, err := ioutil.ReadFile(filename + ".txt")
+	data, err := ioutil.ReadFile(filename + ".json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -17,7 +17,7 @@ func (j *JSONBase) Load(c *msg.Ctx) {
 
 func (j *JSONBase) Save(c *msg.Ctx) {
 	filename := c.Method
-	err := ioutil.WriteFile(filename+".txt", []byte(c.Data), 0777)
+	err := ioutil.WriteFile(filename+".json", []byte(c.Data), 0777)
 	if err != nil {
 		fmt.Println(err)
 	}

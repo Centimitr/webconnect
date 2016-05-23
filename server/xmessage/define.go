@@ -33,6 +33,7 @@ type Ctx struct {
 	Data       string
 	Error      CtxError
 }
+
 type ParamConfig struct {
 	Key      string
 	Required bool
@@ -53,6 +54,7 @@ type CtxError struct {
 func (c *CtxError) NewFatal(info string) {
 	c.Fatal = append(c.Fatal, info)
 }
+
 func (c *CtxError) NewWarn(info string) {
 	c.Warn = append(c.Warn, info)
 }
@@ -67,6 +69,7 @@ func (c *Ctx) Init() {
 	c.reqParams = make(map[string]interface{})
 	c.parseParams()
 }
+
 func (c *Ctx) parseParams() {
 	s := c.req.Params
 	err := json.Unmarshal([]byte(s), &c.reqParams)
