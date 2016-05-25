@@ -7,11 +7,51 @@ import (
 	"strings"
 )
 
+// type Service struct {
+// 	Req  *Req
+// 	Ctx  *Ctx
+// 	Res  *Res
+// 	Temp map[string]map[string]interface{}
+// }
+type temp map[string]interface{} // use for middleware maintain state
+// type temp map[string]map[string]interface{} // use for middleware maintain state
+func (t *temp) getRealKey(scope, key string) string {
+	return scope + "." + key
+}
+
+func (t temp) Get(scope, key string) interface{} {
+	// v, ok := t[t.getRealKey(scope, key)]
+	// if ok {
+	// 	return v
+	// }
+	return t[t.getRealKey(scope, key)]
+	// m, ok := t[scope]
+	// if !ok {
+	// 	m = make(map[string]interface{})
+	// 	t[scope] = m
+	// }
+	// fmt.Println(scope, key, m[key])
+	// return m[key]
+}
+
+func (t temp) Put(scope, key string, v interface{}) {
+	// m, ok := t[scope]
+	// if !ok {
+	// 	m = make(map[string]interface{})
+	// 	t[scope] = m
+	// }
+	// m[key] = v
+	// fmt.Println(scope, key, m[key])
+	t[t.getRealKey(scope, key)] = v
+}
+
 type Req struct {
 	Id     string `json:"id"`
 	Method string `json:"method"`
 	Params string `json:"params"`
 	Data   string `json:"data"`
+	Temp   temp   // use for middleware maintain state
+	// Service *Service
 }
 
 type Res struct {
@@ -20,6 +60,8 @@ type Res struct {
 	Params string `json:"params"`
 	Data   string `json:"data"`
 	Error  string `json:"error"`
+	Temp   temp   // use for middleware maintain state
+	// Service *Service
 }
 
 type Ctx struct {
@@ -32,6 +74,8 @@ type Ctx struct {
 	Params     map[string]string
 	Data       string
 	Error      CtxError
+	Temp       temp // use for middleware maintain state
+	// Service    *Service
 }
 
 type ParamConfig struct {
@@ -62,8 +106,17 @@ func (c *CtxError) NewWarn(info string) {
 /*
 	init
 */
+func (r *Req) Init() {
+	r.Temp = make(map[string]interface{})
+	// r.Temp = make(map[string]map[string]interface{})
+}
+
+func (r *Res) Init() {
+	// r.Temp = make(map[string]map[string]interface{})
+}
 
 func (c *Ctx) Init() {
+	// c.Temp = make(map[string]map[string]interface{})
 	c.Middleware = msg.Middleware.Map
 	c.Params = make(map[string]string)
 	c.reqParams = make(map[string]interface{})
@@ -80,7 +133,7 @@ func (c *Ctx) parseParams() {
 }
 
 /*
-	context methods used in
+	context methods used in processors
 */
 
 func (c *Ctx) getReqParamString(key string) string {

@@ -1,6 +1,7 @@
 package xstatistics
 
 import (
+	// "fmt"
 	msg "github.com/Centimitr/xmessage"
 	"time"
 )
@@ -10,8 +11,11 @@ import (
 */
 
 func (s StatisticsMap) AfterReceive(req *msg.Req) {
-	s.addRequest(req.Method)
-	s.timeMap[req.Id] = time.Now()
+	// s.timesStatAR(req.Method)
+	// s.durationStatAR(req.Id)
+	// req.Temp["Statistic"]["start"] = time.Now().String()
+	req.Temp.Put("Stat", "start", time.Now())
+	s.recordReq(req.Method)
 }
 
 func (s StatisticsMap) BeforeProcess(ctx *msg.Ctx) {
@@ -25,31 +29,12 @@ func (s StatisticsMap) BeforeSend(res *msg.Res) {
 }
 
 func (s StatisticsMap) AfterSend(res *msg.Res) {
-	s.addResponse(res.Method)
-	s.lock.Lock()
-	defer s.lock.Unlock()
-	duration := time.Now().Sub(s.timeMap[res.Id]).Seconds()
-	if s.methodMap[res.Method].MinDuration < 1e-6 {
-		s.methodMap[res.Method].MinDuration = duration
-	}
-	switch {
-	case s.methodMap[res.Method].MinDuration-duration > 1e-6:
-		s.methodMap[res.Method].MinDuration = duration
-	case duration-s.methodMap[res.Method].MaxDuration > 1e-6:
-		s.methodMap[res.Method].MaxDuration = duration
-	case true:
-		times := s.methodMap[res.Method].ResponseTimes
-		s.methodMap[res.Method].AvgDuration = (float64(times-1)*s.methodMap[res.Method].AvgDuration + duration) / float64(times)
-	}
-	delete(s.timeMap, res.Id)
-	if len(s.timeMap) > 64000 {
-		for id, t := range s.timeMap {
-			d := time.Now().Sub(t)
-			if d > time.Second {
-				delete(s.timeMap, id)
-			}
-		}
-	}
+	// fmt.Println(res.Temp["Statistics"]["start"])
+	t := res.Temp.Get("Stat", "start").(time.Time)
+	duration := time.Now().Sub(t)
+	s.recordResAndStat(res.Method, duration)
+	// s.timesStatAS(res.Method)
+	// s.durationStatAS(res.Method, res.Id)
 }
 
 /*
@@ -65,7 +50,7 @@ func init() {
 	msg.LoadMiddleware(Statistics{
 		StatisticsMap{
 			methodMap: make(map[string]*StatisticsItem),
-			timeMap:   make(map[string]time.Time),
+			// timeMap:   make(map[string]time.Time),
 		},
 	})
 }

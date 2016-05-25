@@ -47,6 +47,7 @@ func (m *Msg) Server(ws *websocket.Conn) {
 	var err error
 	for {
 		var req Req
+		req.Init()
 		if err = websocket.JSON.Receive(ws, &req); err != nil {
 			break
 		}
