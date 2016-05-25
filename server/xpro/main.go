@@ -37,7 +37,7 @@ func main() {
 	}
 
 	fmt.Printf("\n %-35s %-10s %-40s\n", "API", "Module", "Package Path")
-	for _, proc := range m.ProcessorMap {
+	for _, proc := ra<n></n>ge m.ProcessorMap {
 		fmt.Printf(" %-35s %-10s %-40s\n", proc.Module+"."+proc.Name, proc.Module, proc.PkgPath)
 	}
 	fmt.Println()
